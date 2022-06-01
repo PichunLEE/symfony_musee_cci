@@ -7,7 +7,14 @@
                     <li class="uk-active">
                         <a href="#">Active</a>
                     </li>
-                    {% if is_granted("ROLE_MEMBRE") %}
+                    
+                </ul>
+            </div>
+        </div>
+        <a class="uk-navbar-item uk-logo" href="{{ path("app_home") }}">MUSEE DE LA CCI</a>
+        <div class="uk-navbar-center-right"><div>
+            <ul class="uk-navbar-nav">
+                {% if is_granted("ROLE_MEMBRE") %}
                     <li>
                         <a href="#">BONJOUR, {{ app.user.nom }} {{ app.user.prenom }}</a>
                         <div class="uk-navbar-dropdown">
@@ -29,23 +36,14 @@
                             </ul>
                         </div>
                     </li>
-                    {% else %}
+                {% else %}
                     <li class="uk-active">
                         <a href="{{ path("app_login") }}">Login</a>
                     </li>
                     <li class="uk-active">
                         <a href="{{ path("app_register") }}">S'ENREGISTRER</a>
                     </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
-        <a class="uk-navbar-item uk-logo" href="{{ path("app_home") }}">MUSEE DE LA CCI</a>
-        <div class="uk-navbar-center-right"><div>
-            <ul class="uk-navbar-nav">
-                <li>
-                    <a href="#">Item</a>
-                </li>
+                {% endif %}
             </ul>
         </div>
     </div>

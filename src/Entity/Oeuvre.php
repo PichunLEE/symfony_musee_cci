@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OeuvreRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OeuvreRepository::class)]
@@ -16,17 +18,23 @@ class Oeuvre
     #[ORM\Column(type: 'string', length: 100)]
     private $nom;
 
-    #[ORM\Column(type: 'string', length: 100)]
-    private $description;
+    #[ORM\Column(type: 'string', length: 150)]
+    private $auteur;
 
     #[ORM\Column(type: 'string', length: 100)]
-    private $artist;
+    private $creation;
 
-    #[ORM\Column(type: 'string', length: 20)]
-    private $date;
+    #[ORM\ManyToOne(targetEntity: categorie::class, inversedBy: 'Oeuvres')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $Categorie;
 
-    #[ORM\Column(type: 'datetime')]
-    private $dateCreation;
+    #[ORM\OneToMany(mappedBy: 'Oeuvre', targetEntity: Commentaire::class)]
+    private $commentaires;
+
+    public function __construct()
+    {
+        $this->commentaires = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -45,50 +53,68 @@ class Oeuvre
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getAuteur(): ?string
     {
-        return $this->description;
+        return $this->auteur;
     }
 
-    public function setDescription(string $description): self
+    public function setAuteur(string $auteur): self
     {
-        $this->description = $description;
+        $this->auteur = $auteur;
 
         return $this;
     }
 
-    public function getArtist(): ?string
+    public function getCreation(): ?string
     {
-        return $this->artist;
+        return $this->creation;
     }
 
-    public function setArtist(string $artist): self
+    public function setCreation(string $creation): self
     {
-        $this->artist = $artist;
+        $this->creation = $creation;
 
         return $this;
     }
 
-    public function getDate(): ?string
+    public function getCategorie(): ?categorie
     {
-        return $this->date;
+        return $this->Categorie;
     }
 
-    public function setDate(string $date): self
+    public function setCategorie(?categorie $Categorie): self
     {
-        $this->date = $date;
+        $this->Categorie = $Categorie;
 
         return $this;
     }
 
-    public function getDateCreation(): ?\DateTimeInterface
+    /**
+     * @return Collection<int, Commentaire>
+     */
+    public function getCommentaires(): Collection
     {
-        return $this->dateCreation;
+        return $this->commentaires;
     }
 
-    public function setDateCreation(\DateTimeInterface $dateCreation): self
+    public function addCommentaire(Commentaire $commentaire): self
     {
-        $this->dateCreation = $dateCreation;
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires[] = $commentaire;
+            $commentaire->setOeuvre($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): self
+    {
+        if ($this->commentaires->removeElement($commentaire)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getOeuvre() === $this) {
+                $commentaire->setOeuvre(null);
+            }
+        }
 
         return $this;
     }

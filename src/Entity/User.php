@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Entity\Interfaces\IRole;
 use App\Repository\UserRepository;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -37,10 +39,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, IRole
     #[ORM\Column(type: 'date', nullable: true)]
     private $datecreation;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Commentaire::class)]
+    private $commentaires;
+
     public function __construct()
     {
         $this->setDatecreation(new DateTime("now"));
         $this->setRoles([self::ROLE_MEMBRE]);
+        // $this->commentaires = new ArrayCollection();
     }
 
     public function addRole(string $role){
@@ -187,6 +193,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, IRole
     public function setDatecreation($datecreation): self
     {
         $this->datecreation = $datecreation;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commentaire>
+     */
+    public function getCommentaires(): Collection
+    {
+        return $this->commentaires;
+    }
+
+    public function addCommentaire(Commentaire $commentaire): self
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires[] = $commentaire;
+            $commentaire->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): self
+    {
+        if ($this->commentaires->removeElement($commentaire)) {
+            // set the owning side to null (unless already changed)
+            if ($commentaire->getUser() === $this) {
+                $commentaire->setUser(null);
+            }
+        }
 
         return $this;
     }
