@@ -33,6 +33,7 @@ class UserFixtures extends Fixture implements IRole
             )
         );
         $manager->persist($user);
+        $this->addReference("admin", $user);
 
         $user = new User(); // ou flush
         $user->setEmail("user@user.fr");
@@ -45,6 +46,7 @@ class UserFixtures extends Fixture implements IRole
         )
         );
         $manager->persist($user);
+        $this->addReference("membre", $user);
         $manager->flush();
     }
 }

@@ -21,8 +21,7 @@
                 <td>{{ commentaire.date ? commentaire.date|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ commentaire.text }}</td>
                 <td>
-                    <a href="{{ path('app_commentaire_show', {'id': commentaire.id}) }}">show</a>
-                    <a href="{{ path('app_commentaire_edit', {'id': commentaire.id}) }}">edit</a>
+                    <a href="{{ path('app_commentaire_new') }}">Create new</a>
                 </td>
             </tr>
         {% else %}

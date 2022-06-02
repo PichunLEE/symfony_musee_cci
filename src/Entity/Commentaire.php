@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CommentaireRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommentaireRepository::class)]
@@ -19,13 +20,18 @@ class Commentaire
     #[ORM\Column(type: 'text')]
     private $text;
 
-    #[ORM\ManyToOne(targetEntity: oeuvre::class, inversedBy: 'commentaires')]
+    #[ORM\ManyToOne(targetEntity: Oeuvre::class)]
     #[ORM\JoinColumn(nullable: false)]
     private $oeuvre;
 
-    #[ORM\ManyToOne(targetEntity: user::class, inversedBy: 'commentaires')]
+    #[ORM\ManyToOne(targetEntity: user::class)]
     #[ORM\JoinColumn(nullable: false)]
     private $user;
+
+    public function __construct()
+    {
+        $this->setDate(new DateTime("now"));
+    }
 
     public function getId(): ?int
     {
@@ -56,12 +62,12 @@ class Commentaire
         return $this;
     }
 
-    public function getOeuvre(): ?oeuvre
+    public function getOeuvre(): ?Oeuvre
     {
         return $this->oeuvre;
     }
 
-    public function setOeuvre(?oeuvre $oeuvre): self
+    public function setOeuvre(?Oeuvre $oeuvre): self
     {
         $this->oeuvre = $oeuvre;
 

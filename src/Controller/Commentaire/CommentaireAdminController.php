@@ -3,6 +3,7 @@
 namespace App\Controller\Commentaire;
 
 use App\Entity\Commentaire;
+use App\Entity\Oeuvre;
 use App\Form\CommentaireType;
 use App\Repository\CommentaireRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,14 +22,16 @@ class CommentaireAdminController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: 'app_commentaire_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, CommentaireRepository $commentaireRepository): Response
+    #[Route('/{oeuvre}/new', name: 'app_commentaire_new', methods: ['GET', 'POST'])]
+    public function new(Request $request, Oeuvre $oeuvre, CommentaireRepository $commentaireRepository): Response
     {
         $commentaire = new Commentaire();
         $form = $this->createForm(CommentaireType::class, $commentaire);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $commentaire->setUser($this->getUser());
+            $commentaire->setOeuvre($oeuvre);
             $commentaireRepository->add($commentaire, true);
 
             return $this->redirectToRoute('app_commentaire_index', [], Response::HTTP_SEE_OTHER);

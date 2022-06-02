@@ -2,7 +2,7 @@
 
 {% block title %}Theme index{% endblock %}
 
-{% block body %}
+{% block contents %}
     <h1>Theme index</h1>
 
     <table class="table">
@@ -20,10 +20,6 @@
                 <td>{{ theme.id }}</td>
                 <td>{{ theme.label }}</td>
                 <td>{{ theme.description }}</td>
-                <td>
-                    <a href="{{ path('app_theme_show', {'id': theme.id}) }}">show</a>
-                    <a href="{{ path('app_theme_edit', {'id': theme.id}) }}">edit</a>
-                </td>
             </tr>
         {% else %}
             <tr>
@@ -32,6 +28,4 @@
         {% endfor %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_theme_new') }}">Create new</a>
 {% endblock %}

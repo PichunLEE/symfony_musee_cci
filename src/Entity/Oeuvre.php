@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\OeuvreRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OeuvreRepository::class)]
@@ -24,16 +22,13 @@ class Oeuvre
     #[ORM\Column(type: 'string', length: 100)]
     private $creation;
 
-    #[ORM\ManyToOne(targetEntity: categorie::class, inversedBy: 'Oeuvres')]
+    #[ORM\ManyToOne(targetEntity: Categorie::class)]
     #[ORM\JoinColumn(nullable: false)]
-    private $Categorie;
-
-    #[ORM\OneToMany(mappedBy: 'Oeuvre', targetEntity: Commentaire::class)]
-    private $commentaires;
+    private $categorie;
 
     public function __construct()
     {
-        $this->commentaires = new ArrayCollection();
+        
     }
 
     public function getId(): ?int
@@ -77,44 +72,14 @@ class Oeuvre
         return $this;
     }
 
-    public function getCategorie(): ?categorie
+    public function getCategorie(): ?Categorie
     {
-        return $this->Categorie;
+        return $this->categorie;
     }
 
-    public function setCategorie(?categorie $Categorie): self
+    public function setCategorie(?Categorie $categorie): self
     {
-        $this->Categorie = $Categorie;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Commentaire>
-     */
-    public function getCommentaires(): Collection
-    {
-        return $this->commentaires;
-    }
-
-    public function addCommentaire(Commentaire $commentaire): self
-    {
-        if (!$this->commentaires->contains($commentaire)) {
-            $this->commentaires[] = $commentaire;
-            $commentaire->setOeuvre($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCommentaire(Commentaire $commentaire): self
-    {
-        if ($this->commentaires->removeElement($commentaire)) {
-            // set the owning side to null (unless already changed)
-            if ($commentaire->getOeuvre() === $this) {
-                $commentaire->setOeuvre(null);
-            }
-        }
+        $this->categorie = $categorie;
 
         return $this;
     }

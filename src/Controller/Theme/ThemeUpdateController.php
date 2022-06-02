@@ -11,13 +11,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/admin/theme')]
-class ThemeCreateController extends AbstractController
+class ThemeUpdateController extends AbstractController
 {
-    #[Route('/add', name: 'app_theme_new', methods: ["GET", "POST"])]
-    public function new(Request $request, ThemeRepository $themeRepository): Response
+    #[Route('/{id}/edit', name: 'app_theme_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Theme $theme, ThemeRepository $themeRepository): Response
     {
-        
-        $theme = new Theme();
         $form = $this->createForm(Theme1Type::class, $theme);
         $form->handleRequest($request);
 
@@ -27,9 +25,11 @@ class ThemeCreateController extends AbstractController
             return $this->redirectToRoute('app_theme_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('admin/theme/new.html.twig', [
+        return $this->renderForm('admin/theme/edit.html.twig', [
             'theme' => $theme,
             'form' => $form,
         ]);
     }
+
+    
 }

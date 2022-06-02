@@ -11,13 +11,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/admin/theme')]
-class ThemeController extends AbstractController
+class ThemeAdminShowController extends AbstractController
 {
-    #[Route('/', name: 'app_theme_index', methods: ['GET'])]
-    public function index(ThemeRepository $themeRepository): Response
+    #[Route('/{id}/show', name: 'app_theme_show', methods: ['GET'])]
+    public function show(Theme $theme): Response
     {
-        return $this->render('admin/theme/index.html.twig', [
-            'themes' => $themeRepository->findAll(),
+        return $this->render('theme/show.html.twig', [
+            'theme' => $theme,
         ]);
     }
 }
